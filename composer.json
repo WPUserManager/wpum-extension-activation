@@ -1,5 +1,5 @@
 {
-  "name": "WPUserManager/wpum-extension-activation",
+  "name": "wp-user-manager/wpum-extension-activation",
   "license": "GPL-3.0-or-later",
   "description": "An helper library to create persistent and dismissible WordPress admin notices.",
   "homepage": "https://github.com/WPUserManager/wpum-extension-activation/",
