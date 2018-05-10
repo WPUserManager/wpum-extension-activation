@@ -1,7 +1,7 @@
 {
   "name": "wp-user-manager/wpum-extension-activation",
   "license": "GPL-3.0-or-later",
-  "description": "An helper library to create persistent and dismissible WordPress admin notices.",
+  "description": "Simple drop-in library for WPUM Addons to check for WP User Manager version requirements and license registration. ",
   "homepage": "https://github.com/WPUserManager/wpum-extension-activation/",
   "authors": [
     {
