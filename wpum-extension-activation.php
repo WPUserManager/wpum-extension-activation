@@ -137,9 +137,11 @@ class WPUM_Extension_Activation {
 	 * @access public
 	 */
 	public function wp_version_notice() {
+		$basename   = plugin_basename( WPUM_PLUGIN_FILE );
+		$update_url = wp_nonce_url( admin_url() . 'update.php?action=upgrade-plugin&plugin=' . urlencode( $basename ), 'upgrade-plugin_' . $basename );
 		?>
 		<div class="error">
-			<p><?php printf( 'The &#8220;%s&#8221; plugin cannot run on WP User Manager versions older than %s. Please update WordPress.', esc_html( $this->title ), $this->wpum_version ); ?></p>
+			<p><?php printf( '<strong>WP User Manager</strong> &mdash; %s addon has been deactivated as it cannot run on WP User Manager versions older than %s. Please <a href="%s">update</a> WP User Manager.', esc_html( $this->title ), $this->wpum_version, $update_url ); ?></p>
 		</div>
 		<?php
 	}
