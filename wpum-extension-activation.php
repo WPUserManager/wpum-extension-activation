@@ -81,7 +81,7 @@ class WPUM_Extension_Activation {
 	public function passes() {
 		$passes = $this->wpum_passes();
 		if ( ! $passes ) {
-			add_action( 'admin_notices', array( $this, 'deactivate' ) );
+			//add_action( 'admin_notices', array( $this, 'deactivate' ) );
 		}
 		return $passes;
     }
@@ -92,6 +92,17 @@ class WPUM_Extension_Activation {
      * @return boolean
      */
     protected function wpum_passes() {
+	    if ( ! file_exists( WP_PLUGIN_DIR . '/wp-user-manager/wp-user-manager.php' ) ) {
+		    add_action( 'admin_notices', array( $this, 'wpum_not_installed_notice' ) );
+
+		    return false;
+	    }
+
+	    if( ! defined( 'WPUM_VERSION' ) ) {
+		    add_action( 'admin_notices', array( $this, 'wpum_not_activated_notice' ) );
+
+		    return false;
+	    }
 
         if ( self::_wpum_at_least( $this->wpum_version ) ) {
 			return true;
@@ -103,14 +114,14 @@ class WPUM_Extension_Activation {
 
     }
 
-    /**
-     * Detect installed version of WPUM.
-     *
-     * @param string $version
-     * @return void
-     */
+	/**
+	 * Detect installed version of WPUM.
+	 *
+	 * @param string $version
+	 *
+	 * @return bool
+	 */
     protected static function _wpum_at_least( $version ) {
-
         if( ! defined( 'WPUM_VERSION' ) ) {
             return false;
         }
@@ -142,6 +153,38 @@ class WPUM_Extension_Activation {
 		?>
 		<div class="error">
 			<p><?php printf( '<strong>WP User Manager</strong> &mdash; %s addon has been deactivated as it cannot run on WP User Manager versions older than %s. Please <a href="%s">update</a> WP User Manager.', esc_html( $this->title ), $this->wpum_version, $update_url ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Show the notice to install WPUM
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function wpum_not_installed_notice() {
+		$slug   = 'wp-user-manager';
+		$update_url = wp_nonce_url( admin_url() . 'update.php?action=install-plugin&plugin=' . urlencode( $slug ), 'install-plugin_' . $slug );
+		?>
+		<div class="error">
+			<p><?php printf( '<strong>WP User Manager</strong> &mdash; %s addon has been deactivated as it requires the core WP User Manager plugin. Please <a href="%s">install</a> WP User Manager.', esc_html( $this->title ), $update_url ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Show the notice to install WPUM
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function wpum_not_activated_notice() {
+		$basename   = 'wp-user-manager/wp-user-manager.php';
+		$update_url = wp_nonce_url( admin_url() . 'update.php?action=activate-plugin&plugin=' . urlencode( $basename ), 'activate-plugin_' . $basename );
+		?>
+		<div class="error">
+			<p><?php printf( '<strong>WP User Manager</strong> &mdash; %s addon has been deactivated as it requires the core WP User Manager plugin to be activated. Please <a href="%s">activate</a> WP User Manager.', esc_html( $this->title ), $update_url ); ?></p>
 		</div>
 		<?php
 	}
